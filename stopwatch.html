@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Digital Stopwatch</title>
+  <style>
+    body {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      font-family: "Segoe UI", Tahoma, sans-serif;
+      background: linear-gradient(to right, #e0f7fa, #e1bee7);
+      margin: 0;
+    }
+    .container {
+      background: white;
+      padding: 30px;
+      border-radius: 20px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+      text-align: center;
+      width: 350px;
+    }
+    h1 {
+      margin-bottom: 10px;
+      color: #4a148c;
+    }
+    h3 {
+      margin-top: 0;
+      font-weight: normal;
+      color: #666;
+    }
+    #stopwatch {
+      font-size: 3em;
+      margin: 20px 0;
+      color: #333;
+    }
+    button {
+      padding: 10px 20px;
+      margin: 5px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      background-color: #4cafef;
+      color: white;
+      font-size: 1em;
+      transition: 0.3s;
+    }
+    button:hover {
+      background-color: #368dd9;
+    }
+    ul {
+      list-style: none;
+      padding: 0;
+      margin-top: 15px;
+      max-height: 150px;
+      overflow-y: auto;
+      border-top: 1px solid #ddd;
+    }
+    ul li {
+      padding: 5px;
+      font-size: 1.1em;
+      color: #444;
+    }
+    #lap-count {
+      margin-top: 10px;
+      font-weight: bold;
+      color: #00796b;
+    }
+    footer {
+      margin-top: 20px;
+      font-size: 0.9em;
+      color: #555;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>⏱ Digital Stopwatch</h1>
+    <h3>Track your time with precision</h3>
+    <div id="stopwatch">00:00:00</div>
+    <div>
+      <button id="start">Start</button>
+      <button id="pause">Pause</button>
+      <button id="reset">Reset</button>
+      <button id="lap">Lap</button>
+    </div>
+    <p id="lap-count">Lap Count: 0</p>
+    <ul id="laps"></ul>
+    <footer>Made with using HTML, CSS & JS</footer>
+  </div>
+
+  <script>
+    let timer;
+    let seconds = 0, minutes = 0, hours = 0;
+    let running = false;
+    let lapCounter = 0;
+
+    function updateTime() {
+      seconds++;
+      if (seconds == 60) { seconds = 0; minutes++; }
+      if (minutes == 60) { minutes = 0; hours++; }
+
+      document.getElementById("stopwatch").innerText =
+        (hours < 10 ? "0" + hours : hours) + ":" +
+        (minutes < 10 ? "0" + minutes : minutes) + ":" +
+        (seconds < 10 ? "0" + seconds : seconds);
+    }
+
+    document.getElementById("start").onclick = () => {
+      if (!running) {
+        timer = setInterval(updateTime, 1000);
+        running = true;
+      }
+    };
+
+    document.getElementById("pause").onclick = () => {
+      clearInterval(timer);
+      running = false;
+    };
+
+    document.getElementById("reset").onclick = () => {
+      clearInterval(timer);
+      running = false;
+      seconds = minutes = hours = 0;
+      lapCounter = 0;
+      document.getElementById("stopwatch").innerText = "00:00:00";
+      document.getElementById("laps").innerHTML = "";
+      document.getElementById("lap-count").innerText = "Lap Count: 0";
+    };
+
+    document.getElementById("lap").onclick = () => {
+      if (running) {
+        lapCounter++;
+        let lapTime = document.getElementById("stopwatch").innerText;
+        let li = document.createElement("li");
+        li.innerText = "Lap " + lapCounter + " ➝ " + lapTime;
+        document.getElementById("laps").appendChild(li);
+        document.getElementById("lap-count").innerText = "Lap Count: " + lapCounter;
+      }
+    };
+  </script>
+</body>
+</html>
